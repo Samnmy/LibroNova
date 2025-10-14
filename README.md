@@ -1,3 +1,16 @@
+---
+
+## 🧑‍💻 Información del Coder
+
+| Campo | Detalle |
+|-------|----------|
+| **👤 Nombre** | Samuel Monsalve Orrego |
+| **🧭 Clan** | Lovelace |
+| **📧 Correo** | samuel.monsalve.orrego@gmail.com |
+| **🪪 Documento** | CC 1013458915 |
+
+---
+
 # 📚 LibroNova - Library Management System  
 
 ![Java](https://img.shields.io/badge/Java-17-orange)
