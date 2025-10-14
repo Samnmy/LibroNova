@@ -1,5 +1,3 @@
----
-
 ## 🧑‍💻 Información del Coder
 
 | Campo | Detalle |
