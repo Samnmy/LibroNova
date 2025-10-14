@@ -6,203 +6,221 @@ import controller.MemberController;
 import javax.swing.JOptionPane;
 
 public class MenuView {
+    // Controller dependencies for handling user actions
     private BookController bookController;
     private MemberController memberController;
     private LoanController loanController;
 
+    // Constructor initializes all controllers
     public MenuView(BookController bookController, MemberController memberController, LoanController loanController) {
         this.bookController = bookController;
         this.memberController = memberController;
         this.loanController = loanController;
     }
 
+    // Main menu method that runs the application loop
     public void showMainMenu() {
         while (true) {
+            // Define main menu options
             String[] options = {
-                    "Gestión de Libros",
-                    "Gestión de Socios",
-                    "Gestión de Préstamos",
-                    "Reportes",
-                    "Salir"
+                    "Book Management",
+                    "Member Management",
+                    "Loan Management",
+                    "Reports",
+                    "Exit"
             };
 
+            // Display main menu dialog
             int choice = JOptionPane.showOptionDialog(null,
-                    "=== SISTEMA DE GESTIÓN DE BIBLIOTECA ===\nSeleccione una opción:",
-                    "Menú Principal",
+                    "=== LIBRARY MANAGEMENT SYSTEM ===\nSelect an option:",
+                    "Main Menu",
                     JOptionPane.DEFAULT_OPTION,
                     JOptionPane.INFORMATION_MESSAGE,
                     null,
                     options,
                     options[0]);
 
+            // Handle user selection
             switch (choice) {
                 case 0:
-                    showBookMenu();
+                    showBookMenu(); // Navigate to book management
                     break;
                 case 1:
-                    showMemberMenu();
+                    showMemberMenu(); // Navigate to member management
                     break;
                 case 2:
-                    showLoanMenu();
+                    showLoanMenu(); // Navigate to loan management
                     break;
                 case 3:
-                    showReportsMenu();
+                    showReportsMenu(); // Navigate to reports
                     break;
                 case 4:
-                case -1: // Close button
-                    JOptionPane.showMessageDialog(null, "¡Gracias por usar el sistema!");
-                    return;
+                case -1: // Close button or exit option
+                    JOptionPane.showMessageDialog(null, "Thank you for using the system!");
+                    return; // Exit application
                 default:
                     break;
             }
         }
     }
 
+    // Book management submenu
     private void showBookMenu() {
         String[] options = {
-                "Agregar Libro",
-                "Listar Todos los Libros",
-                "Buscar por Título",
-                "Buscar por Autor",
-                "Actualizar Libro",
-                "Eliminar Libro",
-                "Volver"
+                "Add Book",
+                "List All Books",
+                "Search by Title",
+                "Search by Author",
+                "Update Book",
+                "Delete Book",
+                "Back"
         };
 
+        // Display book menu dialog
         int choice = JOptionPane.showOptionDialog(null,
-                "=== GESTIÓN DE LIBROS ===",
-                "Menú de Libros",
+                "=== BOOK MANAGEMENT ===",
+                "Book Menu",
                 JOptionPane.DEFAULT_OPTION,
                 JOptionPane.INFORMATION_MESSAGE,
                 null,
                 options,
                 options[0]);
 
+        // Handle book menu selection
         switch (choice) {
             case 0:
-                bookController.addBook();
+                bookController.addBook(); // Add new book
                 break;
             case 1:
-                bookController.showAllBooks();
+                bookController.showAllBooks(); // Display all books
                 break;
             case 2:
-                bookController.searchBooksByTitle();
+                bookController.searchBooksByTitle(); // Search books by title
                 break;
             case 3:
-                bookController.searchBooksByAuthor();
+                bookController.searchBooksByAuthor(); // Search books by author
                 break;
             case 4:
-                bookController.updateBook();
+                bookController.updateBook(); // Update existing book
                 break;
             case 5:
-                bookController.deleteBook();
+                bookController.deleteBook(); // Delete book
                 break;
             default:
-                break;
+                break; // Return to main menu
         }
     }
 
+    // Member management submenu
     private void showMemberMenu() {
         String[] options = {
-                "Agregar Socio",
-                "Listar Todos los Socios",
-                "Listar Socios Activos",
-                "Actualizar Socio",
-                "Desactivar Socio",
-                "Volver"
+                "Add Member",
+                "List All Members",
+                "List Active Members",
+                "Update Member",
+                "Deactivate Member",
+                "Back"
         };
 
+        // Display member menu dialog
         int choice = JOptionPane.showOptionDialog(null,
-                "=== GESTIÓN DE SOCIOS ===",
-                "Menú de Socios",
+                "=== MEMBER MANAGEMENT ===",
+                "Member Menu",
                 JOptionPane.DEFAULT_OPTION,
                 JOptionPane.INFORMATION_MESSAGE,
                 null,
                 options,
                 options[0]);
 
+        // Handle member menu selection
         switch (choice) {
             case 0:
-                memberController.addMember();
+                memberController.addMember(); // Add new member
                 break;
             case 1:
-                memberController.showAllMembers();
+                memberController.showAllMembers(); // Display all members
                 break;
             case 2:
-                memberController.showActiveMembers();
+                memberController.showActiveMembers(); // Display active members only
                 break;
             case 3:
-                memberController.updateMember();
+                memberController.updateMember(); // Update member information
                 break;
             case 4:
-                memberController.deactivateMember();
+                memberController.deactivateMember(); // Deactivate member
                 break;
             default:
-                break;
+                break; // Return to main menu
         }
     }
 
+    // Loan management submenu
     private void showLoanMenu() {
         String[] options = {
-                "Crear Préstamo",
-                "Devolver Libro",
-                "Listar Todos los Préstamos",
-                "Listar Préstamos Activos",
-                "Listar Préstamos por Socio",
-                "Volver"
+                "Create Loan",
+                "Return Book",
+                "List All Loans",
+                "List Active Loans",
+                "List Loans by Member",
+                "Back"
         };
 
+        // Display loan menu dialog
         int choice = JOptionPane.showOptionDialog(null,
-                "=== GESTIÓN DE PRÉSTAMOS ===",
-                "Menú de Préstamos",
+                "=== LOAN MANAGEMENT ===",
+                "Loan Menu",
                 JOptionPane.DEFAULT_OPTION,
                 JOptionPane.INFORMATION_MESSAGE,
                 null,
                 options,
                 options[0]);
 
+        // Handle loan menu selection
         switch (choice) {
             case 0:
-                loanController.createLoan();
+                loanController.createLoan(); // Create new loan
                 break;
             case 1:
-                loanController.returnLoan();
+                loanController.returnLoan(); // Process book return
                 break;
             case 2:
-                loanController.showAllLoans();
+                loanController.showAllLoans(); // Display all loans
                 break;
             case 3:
-                loanController.showActiveLoans();
+                loanController.showActiveLoans(); // Display active loans only
                 break;
             case 4:
-                loanController.showMemberLoans();
+                loanController.showMemberLoans(); // Display loans by specific member
                 break;
             default:
-                break;
+                break; // Return to main menu
         }
     }
 
+    // Reports submenu
     private void showReportsMenu() {
         String[] options = {
-                "Préstamos Vencidos",
-                "Volver"
+                "Overdue Loans",
+                "Back"
         };
 
+        // Display reports menu dialog
         int choice = JOptionPane.showOptionDialog(null,
-                "=== REPORTES ===",
-                "Menú de Reportes",
+                "=== REPORTS ===",
+                "Reports Menu",
                 JOptionPane.DEFAULT_OPTION,
                 JOptionPane.INFORMATION_MESSAGE,
                 null,
                 options,
                 options[0]);
 
+        // Handle reports menu selection
         switch (choice) {
             case 0:
-                loanController.showOverdueLoans();
+                loanController.showOverdueLoans(); // Display overdue loans report
                 break;
             default:
-                break;
+                break; // Return to main menu
         }
     }
 }
