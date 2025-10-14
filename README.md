@@ -3,7 +3,6 @@
 ![Java](https://img.shields.io/badge/Java-17-orange)
 ![MySQL](https://img.shields.io/badge/MySQL-8.0-blue)
 ![JDBC](https://img.shields.io/badge/JDBC-4.2-green)
-![License](https://img.shields.io/badge/License-MIT-lightgrey)
 
 A comprehensive **desktop application for library management** built with **Java SE 17**, featuring book catalog management, member registration, loan tracking, and CSV export capabilities.
 
