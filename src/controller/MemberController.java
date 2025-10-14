@@ -3,102 +3,118 @@ package controller;
 import domain.Member;
 import exceptions.BusinessException;
 import service.MemberService;
+import util.CSVExportUtil;
 import view.MemberView;
 import java.util.List;
 
 public class MemberController {
-    // Service layer dependency for member business logic operations
+    // Handles business logic for member operations
     private MemberService memberService;
-    // View layer dependency for member-related user interface interactions
+    // Handles user interface for member-related screens
     private MemberView memberView;
 
-    // Constructor initializes member service and view dependencies
+    // Constructor - creates new instances of service and view
     public MemberController() {
         this.memberService = new MemberService();
         this.memberView = new MemberView();
     }
 
-    // Method to handle adding a new member
+    // Handles the complete process of adding a new member
     public void addMember() {
         try {
-            // Get member data from view layer
+            // Get member information from user input
             Member member = memberView.showAddMemberForm();
-            // Call service to add member to database
+            // Save member to database through service layer
             memberService.addMember(member);
-            // Show success message to user
+            // Show confirmation message to user
             memberView.showSuccessMessage("Member added successfully");
         } catch (BusinessException e) {
-            // Handle business rule violations (e.g., duplicate ID number, invalid data)
+            // Show specific error message for business rule violations
             memberView.showErrorMessage(e.getMessage());
         } catch (Exception e) {
-            // Handle unexpected errors
+            // Show generic error message for unexpected problems
             memberView.showErrorMessage("Unexpected error: " + e.getMessage());
         }
     }
 
-    // Method to retrieve and display all members
+    // Retrieves and displays all members in the system
     public void showAllMembers() {
-        // Get all members from service layer (both active and inactive)
+        // Get complete list of members from database
         List<Member> members = memberService.getAllMembers();
-        // Display members through view layer
+        // Display the list to the user
         memberView.displayMembers(members);
     }
 
-    // Method to retrieve and display only active members
+    // Retrieves and displays only active members
     public void showActiveMembers() {
-        // Get active members from service layer (members with active status)
+        // Get list of active members from database
         List<Member> members = memberService.getActiveMembers();
-        // Display active members through view layer
+        // Display active members to user
         memberView.displayMembers(members);
     }
 
-    // Method to handle updating an existing member
+    // Handles updating an existing member's information
     public void updateMember() {
         try {
-            // Get ID number from view layer to identify member
+            // Get ID number to identify which member to update
             String idNumber = memberView.askForIdNumber();
-            // Retrieve member from service layer, throw exception if not found
+            // Find the member in database, throw error if not found
             Member member = memberService.getMemberByIdNumber(idNumber)
                     .orElseThrow(() -> new BusinessException("Member not found"));
 
-            // Get updated member data from view layer
+            // Get updated information from user
             Member updatedMember = memberView.showUpdateMemberForm(member);
-            // Call service to update member in database
+            // Save changes to database
             memberService.updateMember(updatedMember);
-            // Show success message to user
+            // Confirm successful update to user
             memberView.showSuccessMessage("Member updated successfully");
 
         } catch (BusinessException e) {
-            // Handle business rule violations
+            // Show specific error message
             memberView.showErrorMessage(e.getMessage());
         } catch (Exception e) {
-            // Handle unexpected errors
+            // Show generic error message
             memberView.showErrorMessage("Unexpected error: " + e.getMessage());
         }
     }
 
-    // Method to handle deactivating a member (soft delete)
+    // Exports all members to a CSV file for reporting
+    public void exportMembersToCSV() {
+        try {
+            // Get all members from database
+            List<Member> members = memberService.getAllMembers();
+            // Export to CSV file with automatic filename
+            String filename = CSVExportUtil.exportMembersToCSV(members);
+            // Confirm export success to user
+            memberView.showSuccessMessage("Members exported successfully to: " + filename);
+        } catch (Exception e) {
+            // Show error if export fails
+            memberView.showErrorMessage("Error exporting members: " + e.getMessage());
+        }
+    }
+
+    // Handles deactivating a member (soft delete - keeps record but marks as inactive)
     public void deactivateMember() {
         try {
-            // Get ID number from view layer to identify member
+            // Get ID number to identify which member to deactivate
             String idNumber = memberView.askForIdNumber();
-            // Retrieve member from service layer, throw exception if not found
+            // Find the member in database, throw error if not found
             Member member = memberService.getMemberByIdNumber(idNumber)
                     .orElseThrow(() -> new BusinessException("Member not found"));
 
-            // Confirm deactivation with user through view layer
+            // Ask user to confirm deactivation
             if (memberView.confirmDeactivation(member)) {
-                // Call service to deactivate member in database
+                // Deactivate member in database (soft delete)
                 memberService.deactivateMember(member.getId());
-                // Show success message to user
+                // Confirm successful deactivation
                 memberView.showSuccessMessage("Member deactivated successfully");
             }
 
         } catch (BusinessException e) {
-            // Handle business rule violations
+            // Show specific error message (e.g., member has active loans)
             memberView.showErrorMessage(e.getMessage());
         } catch (Exception e) {
-            // Handle unexpected errors
+            // Show generic error message
             memberView.showErrorMessage("Unexpected error: " + e.getMessage());
         }
     }

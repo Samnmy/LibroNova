@@ -6,22 +6,22 @@ import controller.MemberController;
 import javax.swing.JOptionPane;
 
 public class MenuView {
-    // Controller dependencies for handling user actions
+    // Controller objects to handle business logic for each module
     private BookController bookController;
     private MemberController memberController;
     private LoanController loanController;
 
-    // Constructor initializes all controllers
+    // Constructor receives all controllers needed for the application
     public MenuView(BookController bookController, MemberController memberController, LoanController loanController) {
         this.bookController = bookController;
         this.memberController = memberController;
         this.loanController = loanController;
     }
 
-    // Main menu method that runs the application loop
+    // Main application loop - displays the primary menu and handles navigation
     public void showMainMenu() {
         while (true) {
-            // Define main menu options
+            // Define the main menu options available to users
             String[] options = {
                     "Book Management",
                     "Member Management",
@@ -30,7 +30,7 @@ public class MenuView {
                     "Exit"
             };
 
-            // Display main menu dialog
+            // Display the main menu dialog to the user
             int choice = JOptionPane.showOptionDialog(null,
                     "=== LIBRARY MANAGEMENT SYSTEM ===\nSelect an option:",
                     "Main Menu",
@@ -40,31 +40,31 @@ public class MenuView {
                     options,
                     options[0]);
 
-            // Handle user selection
+            // Process the user's menu selection
             switch (choice) {
                 case 0:
-                    showBookMenu(); // Navigate to book management
+                    showBookMenu(); // Navigate to book management functions
                     break;
                 case 1:
-                    showMemberMenu(); // Navigate to member management
+                    showMemberMenu(); // Navigate to member management functions
                     break;
                 case 2:
-                    showLoanMenu(); // Navigate to loan management
+                    showLoanMenu(); // Navigate to loan management functions
                     break;
                 case 3:
-                    showReportsMenu(); // Navigate to reports
+                    showReportsMenu(); // Navigate to reports and exports
                     break;
                 case 4:
-                case -1: // Close button or exit option
+                case -1: // User selected Exit or closed the window
                     JOptionPane.showMessageDialog(null, "Thank you for using the system!");
-                    return; // Exit application
+                    return; // Exit the application completely
                 default:
-                    break;
+                    break; // No action for invalid selections
             }
         }
     }
 
-    // Book management submenu
+    // Book management submenu - handles all book-related operations
     private void showBookMenu() {
         String[] options = {
                 "Add Book",
@@ -76,7 +76,7 @@ public class MenuView {
                 "Back"
         };
 
-        // Display book menu dialog
+        // Display book management menu
         int choice = JOptionPane.showOptionDialog(null,
                 "=== BOOK MANAGEMENT ===",
                 "Book Menu",
@@ -86,32 +86,32 @@ public class MenuView {
                 options,
                 options[0]);
 
-        // Handle book menu selection
+        // Route to the appropriate book controller method
         switch (choice) {
             case 0:
-                bookController.addBook(); // Add new book
+                bookController.addBook(); // Add a new book to the system
                 break;
             case 1:
-                bookController.showAllBooks(); // Display all books
+                bookController.showAllBooks(); // Display all books in the catalog
                 break;
             case 2:
-                bookController.searchBooksByTitle(); // Search books by title
+                bookController.searchBooksByTitle(); // Search books by title keyword
                 break;
             case 3:
-                bookController.searchBooksByAuthor(); // Search books by author
+                bookController.searchBooksByAuthor(); // Search books by author name
                 break;
             case 4:
-                bookController.updateBook(); // Update existing book
+                bookController.updateBook(); // Update existing book information
                 break;
             case 5:
-                bookController.deleteBook(); // Delete book
+                bookController.deleteBook(); // Remove a book from the system
                 break;
             default:
                 break; // Return to main menu
         }
     }
 
-    // Member management submenu
+    // Member management submenu - handles all member-related operations
     private void showMemberMenu() {
         String[] options = {
                 "Add Member",
@@ -122,7 +122,7 @@ public class MenuView {
                 "Back"
         };
 
-        // Display member menu dialog
+        // Display member management menu
         int choice = JOptionPane.showOptionDialog(null,
                 "=== MEMBER MANAGEMENT ===",
                 "Member Menu",
@@ -132,29 +132,29 @@ public class MenuView {
                 options,
                 options[0]);
 
-        // Handle member menu selection
+        // Route to the appropriate member controller method
         switch (choice) {
             case 0:
-                memberController.addMember(); // Add new member
+                memberController.addMember(); // Register a new library member
                 break;
             case 1:
-                memberController.showAllMembers(); // Display all members
+                memberController.showAllMembers(); // Display all members (active and inactive)
                 break;
             case 2:
-                memberController.showActiveMembers(); // Display active members only
+                memberController.showActiveMembers(); // Display only active members
                 break;
             case 3:
                 memberController.updateMember(); // Update member information
                 break;
             case 4:
-                memberController.deactivateMember(); // Deactivate member
+                memberController.deactivateMember(); // Deactivate a member account
                 break;
             default:
                 break; // Return to main menu
         }
     }
 
-    // Loan management submenu
+    // Loan management submenu - handles all loan-related operations
     private void showLoanMenu() {
         String[] options = {
                 "Create Loan",
@@ -165,7 +165,7 @@ public class MenuView {
                 "Back"
         };
 
-        // Display loan menu dialog
+        // Display loan management menu
         int choice = JOptionPane.showOptionDialog(null,
                 "=== LOAN MANAGEMENT ===",
                 "Loan Menu",
@@ -175,49 +175,62 @@ public class MenuView {
                 options,
                 options[0]);
 
-        // Handle loan menu selection
+        // Route to the appropriate loan controller method
         switch (choice) {
             case 0:
-                loanController.createLoan(); // Create new loan
+                loanController.createLoan(); // Create a new book loan
                 break;
             case 1:
-                loanController.returnLoan(); // Process book return
+                loanController.returnLoan(); // Process a book return
                 break;
             case 2:
-                loanController.showAllLoans(); // Display all loans
+                loanController.showAllLoans(); // Display all loans (active and returned)
                 break;
             case 3:
-                loanController.showActiveLoans(); // Display active loans only
+                loanController.showActiveLoans(); // Display only active/outstanding loans
                 break;
             case 4:
-                loanController.showMemberLoans(); // Display loans by specific member
+                loanController.showMemberLoans(); // Display loans for a specific member
                 break;
             default:
                 break; // Return to main menu
         }
     }
 
-    // Reports submenu
+    // Reports submenu - handles data export and reporting functions
     private void showReportsMenu() {
+        // Menu options in Spanish as requested (no translation of JOptionPane text)
         String[] options = {
-                "Overdue Loans",
-                "Back"
+                "Préstamos Vencidos",
+                "Exportar Catálogo de Libros (CSV)",
+                "Exportar Lista de Socios (CSV)",
+                "Exportar Todos los Préstamos (CSV)",
+                "Volver"
         };
 
-        // Display reports menu dialog
+        // Display reports menu in Spanish
         int choice = JOptionPane.showOptionDialog(null,
-                "=== REPORTS ===",
-                "Reports Menu",
+                "=== REPORTES Y EXPORTACIÓN ===",
+                "Menú de Reportes",
                 JOptionPane.DEFAULT_OPTION,
                 JOptionPane.INFORMATION_MESSAGE,
                 null,
                 options,
                 options[0]);
 
-        // Handle reports menu selection
+        // Route to the appropriate reporting function
         switch (choice) {
             case 0:
-                loanController.showOverdueLoans(); // Display overdue loans report
+                loanController.showOverdueLoans(); // Display overdue loans
+                break;
+            case 1:
+                bookController.exportBooksToCSV(); // Export book catalog to CSV
+                break;
+            case 2:
+                memberController.exportMembersToCSV(); // Export member list to CSV
+                break;
+            case 3:
+                loanController.exportAllLoansToCSV(); // Export all loans to CSV
                 break;
             default:
                 break; // Return to main menu

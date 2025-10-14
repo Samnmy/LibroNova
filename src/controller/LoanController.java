@@ -3,98 +3,129 @@ package controller;
 import domain.Loan;
 import exceptions.BusinessException;
 import service.LoanService;
+import util.CSVExportUtil;
 import view.LoanView;
 import java.util.List;
 
 public class LoanController {
-    // Service layer dependency for loan business logic operations
+    // Handles business logic for loan operations
     private LoanService loanService;
-    // View layer dependency for loan-related user interface interactions
+    // Handles user interface for loan-related screens
     private LoanView loanView;
 
-    // Constructor initializes loan service and view dependencies
+    // Constructor - creates new instances of service and view
     public LoanController() {
         this.loanService = new LoanService();
         this.loanView = new LoanView();
     }
 
-    // Method to handle creating a new loan
+    // Handles the process of creating a new book loan
     public void createLoan() {
         try {
-            // Get book ID from view layer
+            // Get book ID from user input
             Integer bookId = loanView.askForBookId();
-            // Get member ID from view layer
+            // Get member ID from user input
             Integer memberId = loanView.askForMemberId();
 
-            // Call service to create loan in database
+            // Create the loan in the database through service layer
             loanService.createLoan(bookId, memberId);
-            // Show success message to user
+            // Show confirmation message to user
             loanView.showSuccessMessage("Loan created successfully");
 
         } catch (BusinessException e) {
-            // Handle business rule violations (e.g., book not available, member has too many loans)
+            // Show specific error message for business rule violations
             loanView.showErrorMessage(e.getMessage());
         } catch (Exception e) {
-            // Handle unexpected errors
+            // Show generic error message for unexpected problems
             loanView.showErrorMessage("Unexpected error: " + e.getMessage());
         }
     }
 
-    // Method to handle returning a loan (book return process)
+    // Handles the process of returning a borrowed book
     public void returnLoan() {
         try {
-            // Get loan ID from view layer to identify which loan to return
+            // Get loan ID from user input to identify which loan to return
             Integer loanId = loanView.askForLoanId();
-            // Call service to process book return and update loan status
+            // Process the book return through service layer
             loanService.returnLoan(loanId);
-            // Show success message to user
+            // Show confirmation message to user
             loanView.showSuccessMessage("Return processed successfully");
 
         } catch (BusinessException e) {
-            // Handle business rule violations (e.g., loan not found, already returned)
+            // Show specific error message for business rule violations
             loanView.showErrorMessage(e.getMessage());
         } catch (Exception e) {
-            // Handle unexpected errors
+            // Show generic error message for unexpected problems
             loanView.showErrorMessage("Unexpected error: " + e.getMessage());
         }
     }
 
-    // Method to retrieve and display all loans
+    // Retrieves and displays all loans in the system
     public void showAllLoans() {
-        // Get all loans from service layer (both active and returned)
+        // Get complete list of all loans from database
         List<Loan> loans = loanService.getAllLoans();
-        // Display loans through view layer
+        // Display the list to the user
         loanView.displayLoans(loans);
     }
 
-    // Method to retrieve and display only active loans
+    // Retrieves and displays only active loans (books not yet returned)
     public void showActiveLoans() {
-        // Get active loans from service layer (loans that haven't been returned yet)
+        // Get list of currently active loans from database
         List<Loan> loans = loanService.getActiveLoans();
-        // Display active loans through view layer
+        // Display active loans to user
         loanView.displayLoans(loans);
     }
 
-    // Method to retrieve and display overdue loans
+    // Exports overdue loans to a CSV file for reporting
+    public void exportOverdueLoansToCSV() {
+        try {
+            // Get all overdue loans from database
+            List<Loan> loans = loanService.getOverdueLoans();
+            // Export to CSV file with automatic filename
+            String filename = CSVExportUtil.exportOverdueLoansToCSV(loans);
+            // Confirm export success to user
+            loanView.showSuccessMessage("Overdue loans exported successfully to: " + filename);
+        } catch (Exception e) {
+            // Show error if export fails
+            loanView.showErrorMessage("Error exporting overdue loans: " + e.getMessage());
+        }
+    }
+
+    // Exports all loans to a CSV file for reporting
+    public void exportAllLoansToCSV() {
+        try {
+            // Get all loans from database
+            List<Loan> loans = loanService.getAllLoans();
+            // Export to CSV file with automatic filename
+            String filename = CSVExportUtil.exportAllLoansToCSV(loans);
+            // Confirm export success to user
+            loanView.showSuccessMessage("All loans exported successfully to: " + filename);
+        } catch (Exception e) {
+            // Show error if export fails
+            loanView.showErrorMessage("Error exporting loans: " + e.getMessage());
+        }
+    }
+
+    // Retrieves and displays only overdue loans (books past due date)
     public void showOverdueLoans() {
-        // Get overdue loans from service layer (loans past their due date)
+        // Get list of overdue loans from database
         List<Loan> loans = loanService.getOverdueLoans();
-        // Display overdue loans through view layer
+        // Display overdue loans to user
         loanView.displayLoans(loans);
     }
 
-    // Method to retrieve and display loans for a specific member
+    // Retrieves and displays loans for a specific member
     public void showMemberLoans() {
         try {
-            // Get member ID from view layer
+            // Get member ID from user input
             Integer memberId = loanView.askForMemberId();
-            // Get all loans for the specified member from service layer
+            // Get all loans for this member from database
             List<Loan> loans = loanService.getLoansByMember(memberId);
-            // Display member's loans through view layer
+            // Display member's loans to user
             loanView.displayLoans(loans);
 
         } catch (Exception e) {
-            // Handle unexpected errors
+            // Show generic error message for unexpected problems
             loanView.showErrorMessage("Unexpected error: " + e.getMessage());
         }
     }

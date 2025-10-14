@@ -6,99 +6,125 @@ import domain.Member;
 import exceptions.BusinessException;
 import java.util.List;
 import java.util.Optional;
+import java.util.logging.Logger;
 
 public class MemberService {
-    // Data Access Object for member operations
     private MemberDAO memberDAO;
+    private static final Logger logger = Logger.getLogger(MemberService.class.getName());
 
-    // Constructor initializes the MemberDAO implementation
+    // Constructor - initializes the MemberService with database access
     public MemberService() {
         this.memberDAO = new MemberDAOJDBC();
+        logger.info("MemberService initialized");
     }
 
-    // Method to add a new member with validation
+    // Adds a new member to the system after validation
     public void addMember(Member member) throws BusinessException {
-        validateMember(member); // Validate member data
+        logger.info("Attempting to add new member: " + member.getIdNumber());
 
-        // Check if ID number is unique
+        validateMember(member);
+
+        // Check if ID number is unique in the system
         if (!memberDAO.isIdNumberUnique(member.getIdNumber())) {
+            logger.warning("ID number already exists: " + member.getIdNumber());
             throw new BusinessException("Identification number already exists in the system: " + member.getIdNumber());
         }
 
-        // Save the member to database
         memberDAO.save(member);
+        logger.info("Member added successfully: " + member.getIdNumber());
     }
 
-    // Method to retrieve all members
+    // Retrieves all members from the database
     public List<Member> getAllMembers() {
-        return memberDAO.findAll();
+        logger.info("Retrieving all members");
+        List<Member> members = memberDAO.findAll();
+        logger.info("Retrieved " + members.size() + " members");
+        return members;
     }
 
-    // Method to retrieve only active members
+    // Gets only active members (not deactivated)
     public List<Member> getActiveMembers() {
-        return memberDAO.findActiveMembers();
+        logger.info("Retrieving active members");
+        List<Member> members = memberDAO.findActiveMembers();
+        logger.info("Retrieved " + members.size() + " active members");
+        return members;
     }
 
-    // Method to find a member by identification number
+    // Finds a member by their unique identification number
     public Optional<Member> getMemberByIdNumber(String idNumber) {
+        logger.info("Searching for member by ID number: " + idNumber);
         return memberDAO.findByIdNumber(idNumber);
     }
 
-    // Method to update an existing member with validation
+    // Updates an existing member's information
     public void updateMember(Member member) throws BusinessException {
-        validateMember(member); // Validate member data
+        logger.info("Attempting to update member ID: " + member.getId());
 
-        // Check ID number uniqueness excluding current member
+        validateMember(member);
+
+        // Check for ID number conflicts with other members
         Optional<Member> existingMember = memberDAO.findByIdNumber(member.getIdNumber());
         if (existingMember.isPresent() && !existingMember.get().getId().equals(member.getId())) {
+            logger.warning("ID number conflict during update: " + member.getIdNumber());
             throw new BusinessException("Identification number already exists in the system: " + member.getIdNumber());
         }
 
-        // Update the member in database
         memberDAO.update(member);
+        logger.info("Member updated successfully: " + member.getIdNumber());
     }
 
-    // Method to deactivate a member with validation
+    // Deactivates a member (soft delete) if they have no active loans
     public void deactivateMember(Integer id) throws BusinessException {
-        // Check if member has active loans
+        logger.info("Attempting to deactivate member ID: " + id);
+
+        // Check if member has any active loans before deactivation
         LoanService loanService = new LoanService();
         int activeLoans = loanService.countActiveLoansByMember(id);
 
-        // Prevent deactivation if member has active loans
         if (activeLoans > 0) {
+            logger.warning("Cannot deactivate member with active loans: " + id + " (loans: " + activeLoans + ")");
             throw new BusinessException("Cannot deactivate member because they have " + activeLoans + " active loans");
         }
 
-        // Deactivate the member in database
         memberDAO.deactivateMember(id);
+        logger.info("Member deactivated successfully: " + id);
     }
 
-    // Method to check if a member is active
+    // Checks if a member is currently active
     public boolean isMemberActive(Integer memberId) {
+        logger.fine("Checking member active status - Member ID: " + memberId);
         Optional<Member> member = memberDAO.findById(memberId);
-        return member.isPresent() && member.get().getActive();
+        boolean active = member.isPresent() && member.get().getActive();
+        logger.fine("Member ID " + memberId + " active: " + active);
+        return active;
     }
 
-    // Private method to validate member data
+    // Validates member data meets all business rules
     private void validateMember(Member member) throws BusinessException {
-        // Validate ID number is not null or empty
+        logger.fine("Validating member data");
+
+        // Check required fields are not empty
         if (member.getIdNumber() == null || member.getIdNumber().trim().isEmpty()) {
+            logger.warning("Member validation failed: ID number is required");
             throw new BusinessException("Identification number is required");
         }
 
-        // Validate first name is not null or empty
         if (member.getFirstName() == null || member.getFirstName().trim().isEmpty()) {
+            logger.warning("Member validation failed: First name is required");
             throw new BusinessException("First name is required");
         }
 
-        // Validate last name is not null or empty
         if (member.getLastName() == null || member.getLastName().trim().isEmpty()) {
+            logger.warning("Member validation failed: Last name is required");
             throw new BusinessException("Last name is required");
         }
 
         // Validate email format if provided
         if (member.getEmail() != null && !member.getEmail().contains("@")) {
+            logger.warning("Member validation failed: Invalid email format");
             throw new BusinessException("Email does not have a valid format");
         }
+
+        logger.fine("Member validation passed");
     }
 }
