@@ -7,40 +7,51 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class DatabaseConfig {
+    // Logger instance for logging database operations and errors
     private static final Logger logger = Logger.getLogger(DatabaseConfig.class.getName());
 
+    // Method to establish and return a database connection
     public static Connection getConnection() throws SQLException {
+        // Database connection parameters
         String url = "jdbc:mysql://localhost:3306/library_db";
         String user = "root";
         String password = "Qwe.123*";
 
         try {
-            // Cargar el driver de MySQL
+            // Load MySQL JDBC driver class
             Class.forName("com.mysql.cj.jdbc.Driver");
-            System.out.println("🔌 Intentando conectar a: " + url);
-            System.out.println("👤 Usuario: " + user);
+            // Display connection attempt information
+            System.out.println("Attempting connection to: " + url);
+            System.out.println("User: " + user);
 
+            // Establish connection to MySQL database
             Connection conn = DriverManager.getConnection(url, user, password);
-            System.out.println("✅ Conexión exitosa a MySQL!");
+            // Success message
+            System.out.println("Connection to MySQL successful!");
             return conn;
 
         } catch (ClassNotFoundException e) {
-            logger.log(Level.SEVERE, "MySQL Driver no encontrado", e);
-            throw new SQLException("Driver no encontrado");
+            // Log error if MySQL driver is not found
+            logger.log(Level.SEVERE, "MySQL Driver not found", e);
+            throw new SQLException("Driver not found");
         } catch (SQLException e) {
-            System.err.println("❌ Error de conexión: " + e.getMessage());
-            System.err.println("💡 Solución: Verifica que MySQL esté ejecutándose y las credenciales sean correctas");
+            // Handle SQL connection errors and display troubleshooting tips
+            System.err.println("Connection error: " + e.getMessage());
+            System.err.println("Solution: Verify MySQL is running and credentials are correct");
             throw e;
         }
     }
 
+    // Method to initialize database schema and tables
     public static void initializeDatabase() {
-        System.out.println("🔄 Inicializando base de datos...");
+        System.out.println("Initializing database...");
 
-        // Primero crear la base de datos si no existe
+        // SQL statement to create database if it doesn't exist
         String createDatabase = "CREATE DATABASE IF NOT EXISTS library_db";
+        // SQL statement to switch to the library database
         String useDatabase = "USE library_db";
 
+        // SQL statement to create books table with all necessary columns
         String createBooksTable = """
             CREATE TABLE IF NOT EXISTS books (
                 id INT AUTO_INCREMENT PRIMARY KEY,
@@ -55,6 +66,7 @@ public class DatabaseConfig {
             )
             """;
 
+        // SQL statement to create members table with member information
         String createMembersTable = """
             CREATE TABLE IF NOT EXISTS members (
                 id INT AUTO_INCREMENT PRIMARY KEY,
@@ -69,6 +81,7 @@ public class DatabaseConfig {
             )
             """;
 
+        // SQL statement to create loans table with foreign key relationships
         String createLoansTable = """
             CREATE TABLE IF NOT EXISTS loans (
                 id INT AUTO_INCREMENT PRIMARY KEY,
@@ -88,22 +101,25 @@ public class DatabaseConfig {
         try (Connection conn = getConnection();
              var stmt = conn.createStatement()) {
 
-            // Crear base de datos
+            // Execute database creation and selection
             stmt.execute(createDatabase);
             stmt.execute(useDatabase);
 
-            // Crear tablas
+            // Execute table creation statements
             stmt.execute(createBooksTable);
             stmt.execute(createMembersTable);
             stmt.execute(createLoansTable);
 
-            System.out.println("✅ Base de datos y tablas creadas exitosamente");
+            // Success message after database initialization
+            System.out.println("Database and tables created successfully");
 
         } catch (SQLException e) {
-            System.err.println("❌ Error creando base de datos: " + e.getMessage());
+            // Error handling for database creation failures
+            System.err.println("Error creating database: " + e.getMessage());
         }
     }
 
+    // Getter method for logger instance
     public static Logger getLogger() {
         return logger;
     }

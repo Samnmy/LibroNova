@@ -26,7 +26,6 @@ public class TestConnection {
             System.out.println("1. Verify that MySQL is running");
             System.out.println("2. Try with empty password: password = \"\"");
             System.out.println("3. Try with password 'root': password = \"root\"");
-            System.out.println("4. If using XAMPP, ensure MySQL is active in control panel");
         }
     }
 }
