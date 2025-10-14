@@ -8,16 +8,18 @@ import view.MenuView;
 
 public class Main {
     public static void main(String[] args) {
-        // Initialize database connection
+        // Initialize database connection and create necessary tables
         DatabaseConfig.initializeDatabase();
 
-        // Initialize controllers
+        // Initialize controllers for handling business operations
         BookController bookController = new BookController();
         MemberController memberController = new MemberController();
         LoanController loanController = new LoanController();
 
-        // Start main menu
+        // Create main menu view and pass controllers as dependencies
         MenuView menuView = new MenuView(bookController, memberController, loanController);
+
+        // Display the main menu to start user interaction
         menuView.showMainMenu();
     }
 }

@@ -5,19 +5,28 @@ import java.sql.Connection;
 
 public class TestConnection {
     public static void main(String[] args) {
-        System.out.println("🧪 Probando conexión a MySQL...");
+        // Display message indicating connection test is starting
+        System.out.println("🧪 Testing MySQL connection...");
 
         try {
+            // Attempt to get database connection from DatabaseConfig
             Connection conn = DatabaseConfig.getConnection();
-            System.out.println("🎉 ¡Conexión exitosa!");
+
+            // Success message if connection is established
+            System.out.println("🎉 Connection successful!");
+
+            // Close the connection to release resources
             conn.close();
         } catch (Exception e) {
+            // Error handling if connection fails
             System.err.println("💥 Error: " + e.getMessage());
-            System.out.println("\n🔧 SOLUCIONES POSIBLES:");
-            System.out.println("1. Verifica que MySQL esté ejecutándose");
-            System.out.println("2. Prueba con contraseña vacía: password = \"\"");
-            System.out.println("3. Prueba con contraseña 'root': password = \"root\"");
-            System.out.println("4. Si usas XAMPP, asegúrate de que MySQL esté activo en el panel de control");
+
+            // Display possible solutions for connection issues
+            System.out.println("\n🔧 POSSIBLE SOLUTIONS:");
+            System.out.println("1. Verify that MySQL is running");
+            System.out.println("2. Try with empty password: password = \"\"");
+            System.out.println("3. Try with password 'root': password = \"root\"");
+            System.out.println("4. If using XAMPP, ensure MySQL is active in control panel");
         }
     }
 }
