@@ -1,11 +1,11 @@
-## 🧑‍💻 Información del Coder
+## 🧑‍💻 Coder Information
 
-| Campo | Detalle |
+| Field | Detail |
 |-------|----------|
-| **👤 Nombre** | Samuel Monsalve Orrego |
+| **👤 Name** | Samuel Monsalve Orrego |
 | **🧭 Clan** | Lovelace |
-| **📧 Correo** | samuel.monsalve.orrego@gmail.com |
-| **🪪 Documento** | CC 1013458915 |
+| **📧 Mail** | samuel.monsalve.orrego@gmail.com |
+| **🪪 Document** | CC 1013458915 |
 
 ---
 
